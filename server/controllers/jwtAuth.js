@@ -1,10 +1,10 @@
-const express = require('express');
-const router = express.Router();
-const bcrypt = require('bcrypt');
-const pool = require('../db');
-const validInfo = require('../middleware/validInfo');
-const jwtGenerator = require('../utils/jwtGenerator');
-const authorize = require('../middleware/authorize');
+// const express = require('express');
+// const router = express.Router();
+// const bcrypt = require('bcrypt');
+// const pool = require('../db');
+// const validInfo = require('../middleware/validInfo');
+// const jwtGenerator = require('../utils/jwtGenerator');
+// const authorize = require('../middleware/authorize');
 
 //create a profile
 // router.post('/signup', validInfo, async (req, res) => {
@@ -45,84 +45,84 @@ const authorize = require('../middleware/authorize');
 
 
 //profile
-router.get('/profile', (req, res) => {
-    if (req.profile) {
-        return res.json(req.profile);
-    } else {
-        return res.json({});
-    }
-})
+// router.get('/profile', (req, res) => {
+//     if (req.profile) {
+//         return res.json(req.profile);
+//     } else {
+//         return res.json({});
+//     }
+// })
 
-// log in
-router.post('/login', validInfo, async (req, res) => {
-    const {email, password} = req.body;
+// // log in
+// router.post('/login', validInfo, async (req, res) => {
+//     const {email, password} = req.body;
 
-    try {
-        const profile = await pool.query('SELECT * FROM profiles WHERE email = $1', [
-            email
-        ]);
+//     try {
+//         const profile = await pool.query('SELECT * FROM profiles WHERE email = $1', [
+//             email
+//         ]);
 
-        if (profile.rows.length === 0) {
-            return res.status(401).json('Invalid login');
-        }
+//         if (profile.rows.length === 0) {
+//             return res.status(401).json('Invalid login');
+//         }
 
-        const validPassword = await bcrypt.compare(
-            password, 
-            profile.rows[0].password
-        );
+//         const validPassword = await bcrypt.compare(
+//             password, 
+//             profile.rows[0].password
+//         );
 
-        if (!validPassword) {
-            return res.status(401).json('Invalid login')
-        }
+//         if (!validPassword) {
+//             return res.status(401).json('Invalid login')
+//         }
 
-        const jwtToken = jwtGenerator(user.rows[0].id);
-        return res.json({jwtToken});
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Internal server error');
-    }
-});
+//         const jwtToken = jwtGenerator(user.rows[0].id);
+//         return res.json({jwtToken});
+//     } catch (err) {
+//         console.error(err.message);
+//         res.status(500).send('Internal server error');
+//     }
+// });
 
-//verify log in
-router.post('/verify', authorize, (req, res) => {
-    try {
-        res.json(true);
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Internal server error')
-    }
-});
+// //verify log in
+// router.post('/verify', authorize, (req, res) => {
+//     try {
+//         res.json(true);
+//     } catch (err) {
+//         console.error(err.message);
+//         res.status(500).send('Internal server error')
+//     }
+// });
 
-//logout
-router.delete('/logout',(req, res, next) => {
-        res.status(500).send('204')
-});
+// //logout
+// router.delete('/logout',(req, res, next) => {
+//         res.status(500).send('204')
+// });
 
-//update profile
-router.put('/:id', validInfo, async (req, res) => {
-    const {password} = req.params;
+// //update profile
+// router.put('/:id', validInfo, async (req, res) => {
+//     const {password} = req.params;
 
-    try {
-        const profile = await pool.query(`DELETE FROM profiles WHERE id = ${req.params.password};`, [password])
-        res.status(200).send('Password has been updated')
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Failed to update password')
-    }
-});
+//     try {
+//         const profile = await pool.query(`DELETE FROM profiles WHERE id = ${req.params.password};`, [password])
+//         res.status(200).send('Password has been updated')
+//     } catch (err) {
+//         console.error(err.message);
+//         res.status(500).send('Failed to update password')
+//     }
+// });
 
-//delete profile
-router.delete('/:id', validInfo, async (req, res) => {
-    const {id} = req.params;
+// //delete profile
+// router.delete('/:id', validInfo, async (req, res) => {
+//     const {id} = req.params;
 
-    try {
-        const profile = await pool.query(`DELETE FROM profiles WHERE id = ${req.params.id};`, [id])
-        res.status(200).send('Profile has been deleted')
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Failed to delete profile')
-    }
-});
+//     try {
+//         const profile = await pool.query(`DELETE FROM profiles WHERE id = ${req.params.id};`, [id])
+//         res.status(200).send('Profile has been deleted')
+//     } catch (err) {
+//         console.error(err.message);
+//         res.status(500).send('Failed to delete profile')
+//     }
+// });
 
 
-module.exports = router;
+// module.exports = router;
