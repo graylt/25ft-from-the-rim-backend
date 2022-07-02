@@ -26,13 +26,13 @@ router.post('/', authorize, async (req, res) => {
 })
 
 // routes for authorization
-router.get('/', validInfo, async (req, res) => {
-    postgres.query('SELECT * FROM profiles ORDER BY id ASC;', 
-    (err, results) => {
-        res.json(results.rows)
-    });
-    res.render('/profile');
-});
+// router.get('/', validInfo, async (req, res) => {
+//     postgres.query('SELECT * FROM profiles ORDER BY id ASC;', 
+//     (err, results) => {
+//         res.json(results.rows)
+//     });
+//     res.render('/profile');
+// });
 
 //post/create
 router.post('/register', validInfo, async (req, res) => {
