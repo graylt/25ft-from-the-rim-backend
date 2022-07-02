@@ -25,6 +25,9 @@ app.use(express.json());
 app.use(cors());
 
 app.use(express.static('public'));
+
+// Serve static files from the React frontend app
+app.use(express.static(path.join(__dirname, '../client/build')))
  
 
 
@@ -47,6 +50,12 @@ app.use('/auth', authController)
 
 const testController = require('./controllers/test.js');
 app.use('/test', testController)
+
+// After defining your routes, anything that doesn't match what's above, we want to return index.html from our built React app
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname + '/../client/build/index.html'))
+})
+
 
 //___________________
 //Initial Test route
