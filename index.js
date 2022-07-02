@@ -29,7 +29,8 @@ app.use(cors());
 
 
 //Static
-app.use(express.static('public'));
+// app.use(express.static('public'));
+app.use(express.static(__dirname + "/public"));
 
 // Serve static files from the React frontend app
 app.use(express.static(path.join(__dirname, 'build')));
@@ -46,6 +47,10 @@ app.use(express.static(path.join(__dirname, 'build')));
 
 // Authorization
 /////////////////////////////////////////////////////////////////////////
+
+app.get("/", (req, res, next) => {
+    res.sendFile( path.resolve( __dirname, 'public/index.html' ) );
+});
 
 const authController = require('./controllers/jwtAuth.js');
 app.use('/auth', authController)
@@ -79,9 +84,9 @@ postgres.connect();
 //     res.sendFile(path.join(__dirname + '/../client/build/index.html'))
 // })
 
-app.get('/', function(req, res) {
-    res.sendFile(path.join(__dirname, 'build', 'index.html'));
-  });
+// app.get('/', function(req, res) {
+//     res.sendFile(path.join(__dirname, 'build', 'index.html'));
+//   });
 
 
 
@@ -89,9 +94,12 @@ app.get('/', function(req, res) {
 //     console.log('listening...');
 // });
 
-app.listen(process.env.PORT || 3000, () => {
-    console.log(`server has started on port ${process.env.PORT || 3000}`)
-})
+// app.listen(process.env.PORT || 3000, () => {
+//     console.log(`server has started on port ${process.env.PORT || 3000}`)
+// })
+
+const port = process.env.PORT || 5000;
+app.listen(port, () => console.log("Server running on port 5000"));
 
 //___________________
 //Listener
