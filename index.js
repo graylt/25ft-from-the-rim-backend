@@ -62,6 +62,13 @@ app.get("/", (req, res, next) => {
     res.sendFile( path.resolve( __dirname, 'public/index.html' ) );
 });
 
+app.get('/profile', validInfo, async (req, res) => {
+    postgres.query('SELECT * FROM profiles ORDER BY id ASC;', 
+    (err, results) => {
+        res.json(results.rows)
+    });
+});
+
 const authController = require('./controllers/jwtAuth.js');
 app.use('/auth', authController)
 
