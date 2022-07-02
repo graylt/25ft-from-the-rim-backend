@@ -29,6 +29,7 @@ CREATE TABLE historical_player(
     pace_impact VARCHAR(255) DEFAULT NULL
 );
 
+-- Table without UUID
 CREATE TABLE profiles(
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL, 
@@ -36,21 +37,19 @@ CREATE TABLE profiles(
     password VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE profiles(
-    -- id UUID DEFAULT uuid_generate_v4(),
-    id SERIAL PRIMARY KEY,
+CREATE TABLE test(
+    test_id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL, 
-    email VARCHAR(255) NOT NULL UNIQUE, 
-    password VARCHAR(255) NOT NULL,
-    -- PRIMARY KEY(id)
+    email VARCHAR(255) NOT NULL UNIQUE
 );
 
-INSERT INTO profiles (name, email, password) VALUES ($1,$2, $3);
-
--- CREATE TABLE profiles (
---     -- id UUID DEFAULT uuid_generate_v4(),
+-- CREATE TABLE profiles(
+--     id UUID DEFAULT uuid_generate_v4(),
 --     id SERIAL PRIMARY KEY,
 --     name VARCHAR(255) NOT NULL, 
 --     email VARCHAR(255) NOT NULL UNIQUE, 
 --     password VARCHAR(255) NOT NULL,
+--     PRIMARY KEY(id)
 -- );
+
+INSERT INTO profiles (name, email, password) VALUES ($1,$2, $3);

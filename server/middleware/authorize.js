@@ -1,42 +1,25 @@
 
 const jwt = require('jsonwebtoken');
-const postgres = require('../postgres.js');
+const config = require("../config/authConfig.js");
 require('dotenv').config();
 
-// module.exports = function(req, res, next) {
-
-//     // get token from header
-//     const token = req.header('jwt_token');
-//     // return if there is no token
-//         if (!token) {
-//             return res.status(403).json({msg: 'Token not found'});
-//         }
-//     // verify token
-//         try {
-//             // this will give the profile id (profile:{id: profile.id})
-//             const verify = jwt.verify(token, `${process.env.jwtSecret}`);
-    
-//             req.profile = verify.profile;
-//             next();
-//         } catch (err) {
-//             res.status(401).json({msg: 'Invalid token'})
-//         }
-
-// }
-
 module.exports = async (req, res, next) => {
-    console.log(req.header('token'));
-    console.log('token?')
+    // console.log(req.header('token'));
+    // console.log('token?')
     // try {
+// get token from header
         const jwtToken = req.header('token');
-
+ // return if there is no token
         if (!jwtToken) {
             return res.status(403).json('Token not found')
         }
+// verify token
         try {
-        const payload = jwt.verify(jwtToken, process.env.jwtSecret);
+// this will give the profile id (profile:{id: profile.id})
+        const payload = jwt.verify(jwtToken, config.secret);
 
-        req.profile = payload.profile;
+        // req.profile = payload.profile;
+        req.id = payload.id;
 
         next();
     } catch (err) {
@@ -44,6 +27,38 @@ module.exports = async (req, res, next) => {
         return res.status(403).json('Invalid token')
     }
 }
+
+/////////////////////////////////////////////////////////////////////////
+// code graveyard
+/////////////////////////////////////////////////////////////////////////
+
+// verifyToken = (req, res, next) => {
+// let token = req.headers('access-token');
+
+// if (!token) {
+//     return res.status(403).json(
+//          'Token not found'
+//     )
+// }
+
+// // verify token
+// jwt.verify(token, config.secret, (err, decoded) => {
+//     if (err) {
+//         return res.status(401).json(
+//          'Invalid token'
+//         )
+//     }
+//     req.id = decoded.id;
+//     next();
+// })
+
+// };
+
+// const authJwt = {
+//     verifyToken: verifyToken
+// }
+
+// module.exports = authJwt;
 
 // module.exports = async (req, res, next) => {
 //     try {
@@ -67,9 +82,47 @@ module.exports = async (req, res, next) => {
 //   };
 
 
-/////////////////////////////////////////////////////////////////////////
-// code graveyard
-/////////////////////////////////////////////////////////////////////////
+// module.exports = function(req, res, next) {
+
+//     // get token from header
+//     const token = req.header('jwt_token');
+//     // return if there is no token
+//         if (!token) {
+//             return res.status(403).json({msg: 'Token not found'});
+//         }
+//     // verify token
+//         try {
+//             // this will give the profile id (profile:{id: profile.id})
+//             const verify = jwt.verify(token, `${process.env.jwtSecret}`);
+    
+//             req.profile = verify.profile;
+//             next();
+//         } catch (err) {
+//             res.status(401).json({msg: 'Invalid token'})
+//         }
+
+// }
+
+// module.exports = async (req, res, next) => {
+//     try {
+//       jwt.verify(
+//         // req.cookies.t,
+//         process.env.jwtSecret,
+//         (err, decoded) => {
+//           if (err) {
+//             return res.status(401).json({
+//               message: "Unauthorized",
+//             });
+//           } else {
+//             req.profile = decoded.profile;
+//             next();
+//           }
+//         }
+//       );
+//     } catch (error) {
+//       throw error;
+//     }
+//   };
 
 // const jwt = require('jsonwebtoken');
 // require('dotenv').config();
@@ -94,9 +147,6 @@ module.exports = async (req, res, next) => {
 // }
 
 // module.exports = authToken
-
-
-
 
 // require('dotenv').config();
 // const jwt = require("jsonwebtoken");

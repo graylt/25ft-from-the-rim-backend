@@ -12,7 +12,9 @@ function jwtGenerator (id) {
 //     profile: id
 // }
 
-    return jwt.sign(payload, `${process.env.jwtSecret}`, {expiresIn: '60s'});
+    return jwt.sign(payload, 
+        `${process.env.jwtSecret}`, 
+        {expiresIn: '60s'});
 }
 
 module.exports = jwtGenerator;
