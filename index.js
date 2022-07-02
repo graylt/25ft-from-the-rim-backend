@@ -16,9 +16,6 @@ const postgres = require('./postgres.js');
 // const jwtGenerator = require('./utils/jwtGenerator');
 // const jwt = require('jsonwebtoken');
 require('dotenv').config();
-dotenv.config({
-    path: '../.env'
-})
 
 //___________________
 //Middleware
