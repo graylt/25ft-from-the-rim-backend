@@ -21,18 +21,20 @@ require('dotenv').config();
 //Middleware
 //___________________
 
+// app.use(methodOverride('_method'));
+app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 app.use(cors());
 
+
+
+//Static
 app.use(express.static('public'));
 
 // Serve static files from the React frontend app
-app.use(express.static(path.join(__dirname, '../client/build')))
+app.use(express.static(path.join(__dirname, 'build')));
  
 
-
-// app.use(methodOverride('_method'));
-app.use(express.urlencoded({extended: false}));
 
 /////////////////////////////////////////////////////////////////////////
 // routes
@@ -73,9 +75,13 @@ postgres.connect();
 
 // })
 
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname + '/../client/build/index.html'))
-})
+// app.get('*', (req, res) => {
+//     res.sendFile(path.join(__dirname + '/../client/build/index.html'))
+// })
+
+app.get('/', function(req, res) {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+  });
 
 app.listen(process.env.PORT || 3000, () => {
     console.log('listening...');
