@@ -1,16 +1,18 @@
 const Client = require('pg').Client
-require("dotenv").config();
+// require("dotenv").config();
 
 const devConfig = `postgresql://${process.env.PG_USER}:${process.env.PG_PASSWORD}@${process.env.PG_HOST}:${process.env.PG_PORT}/${process.env.PG_DATABASE}`;
 
-const proConfig = process.env.DATABASE_URL; //heroku addons
+const proConfig = process.env.DATABASE_URL; 
+// heroku addons
+
+// const dbConfig = {
+// 	connectionString:  process.env.NODE_ENV === "production" ? proConfig : devConfig,
+// }
 
 const dbConfig = {
-	connectionString:  process.env.NODE_ENV === "production" ? proConfig : devConfig,
+	connectionString: 'postgresql://localhost:5432/twentyfiveftfromtherim',
 }
-// const dbConfig = {
-// 	connectionString: 'postgresql://localhost:5432/twentyfiveftfromtherim',
-// }
 
 if (process.env.DATABASE_URL){
 	dbConfig.ssl = { rejectUnauthorized: false }

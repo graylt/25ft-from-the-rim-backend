@@ -1,7 +1,10 @@
 /////////////////////////////////////////////////////////////////////////
 // set up
 /////////////////////////////////////////////////////////////////////////
-
+// "scripts": {
+//     "start": "node index.js",
+//     "server": "nodemon index.js"
+//   },
 const express = require('express');
 const cors = require('cors');
 // const axios = require('axios');
@@ -10,7 +13,7 @@ const cors = require('cors');
 const app = express();
 const path = require('path');
 const postgres = require('./postgres.js');
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 // const bcrypt = require('bcrypt');
 const validInfo = require('./middleware/validInfo');
 // const authorize = require('./middleware/authorize');
