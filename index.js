@@ -36,10 +36,10 @@ app.use(express.urlencoded({extended: false}));
 // Authorization
 /////////////////////////////////////////////////////////////////////////
 
-const authController = require('/controllers/jwtAuth.js');
+const authController = require('./controllers/jwtAuth.js');
 app.use('/auth', authController)
 
-const testController = require('/controllers/test.js');
+const testController = require('./controllers/test.js');
 app.use('/test', testController)
 
 //___________________
