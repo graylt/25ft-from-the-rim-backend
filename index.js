@@ -7,14 +7,13 @@ const cors = require('cors');
 // const axios = require('axios');
 // const methodOverride = require('method-override');
 // const pool = require('./db');
+const app = express();
 const postgres = require('./postgres.js');
 // const bcrypt = require('bcrypt');
 // const validInfo = require('./middleware/validInfo');
 // const authorize = require('./middleware/authorize');
 // const jwtGenerator = require('./utils/jwtGenerator');
 // const jwt = require('jsonwebtoken');
-
-const app = express();
 require('dotenv').config();
 
 //___________________

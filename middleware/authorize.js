@@ -1,6 +1,6 @@
 
 const jwt = require('jsonwebtoken');
-const config = require("./config/authConfig.js");
+const config = require("../config/authConfig.js");
 require('dotenv').config();
 
 module.exports = async (req, res, next) => {
