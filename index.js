@@ -8,6 +8,7 @@ const cors = require('cors');
 // const methodOverride = require('method-override');
 // const pool = require('./db');
 const app = express();
+const path = require('path');
 const postgres = require('./postgres.js');
 // const bcrypt = require('bcrypt');
 // const validInfo = require('./middleware/validInfo');
