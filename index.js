@@ -7,7 +7,7 @@ const cors = require('cors');
 // const axios = require('axios');
 // const methodOverride = require('method-override');
 // const pool = require('./db');
-const postgres = require('/postgres.js');
+const postgres = require('./postgres.js');
 // const bcrypt = require('bcrypt');
 // const validInfo = require('./middleware/validInfo');
 // const authorize = require('./middleware/authorize');
@@ -36,10 +36,10 @@ app.use(express.urlencoded({extended: false}));
 // Authorization
 /////////////////////////////////////////////////////////////////////////
 
-const authController = require('./controllers/jwtAuth.js');
+const authController = require('/controllers/jwtAuth.js');
 app.use('/auth', authController)
 
-const testController = require('./controllers/test.js');
+const testController = require('/controllers/test.js');
 app.use('/test', testController)
 
 //___________________

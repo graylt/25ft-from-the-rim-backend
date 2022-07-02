@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const postgres = require('../postgres.js');
+const postgres = require('./postgres.js');
 
 router.get('/', (req, res) => {
     postgres.query('SELECT * FROM test ORDER BY test_id ASC;', (err, results) => {

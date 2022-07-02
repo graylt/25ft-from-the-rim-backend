@@ -3,10 +3,10 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 // const pool = require('../db');
 // const authConfig = require("../config/authConfig");
-const validInfo = require('../middleware/validInfo');
-const jwtGenerator = require('../utils/jwtGenerator');
-const authorize = require('../middleware/authorize');
-const postgres = require('../postgres.js');
+const validInfo = require('./middleware/validInfo');
+const jwtGenerator = require('./utils/jwtGenerator');
+const authorize = require('./middleware/authorize');
+const postgres = require('./postgres.js');
 
 // route for dashboard
 router.post('/', authorize, async (req, res) => {
