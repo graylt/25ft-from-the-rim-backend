@@ -43,6 +43,11 @@ app.use(express.urlencoded({extended: false}));
 // routes
 /////////////////////////////////////////////////////////////////////////
 
+app.get('*', function (req, res) {
+    const index = path.join(__dirname, 'build', 'index.html');
+    res.sendFile(index);
+  });
+
 // Authorization
 /////////////////////////////////////////////////////////////////////////
 
