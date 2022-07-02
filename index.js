@@ -10,7 +10,6 @@ const cors = require('cors');
 const app = express();
 const path = require('path');
 const postgres = require('./postgres.js');
-const server = http.createServer(app);
 // const bcrypt = require('bcrypt');
 // const validInfo = require('./middleware/validInfo');
 // const authorize = require('./middleware/authorize');
@@ -86,9 +85,13 @@ app.get('/', function(req, res) {
 
 
 
-app.listen(process.env.PORT || 3000, () => {
-    console.log('listening...');
-});
+// app.listen(process.env.PORT || 3000, () => {
+//     console.log('listening...');
+// });
+
+app.listen(process.env.PORT || 5000, () => {
+    console.log(`server has started on port ${process.env.PORT || 5000}`)
+})
 
 //___________________
 //Listener
