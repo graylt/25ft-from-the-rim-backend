@@ -89,8 +89,8 @@ app.get('/', function(req, res) {
 //     console.log('listening...');
 // });
 
-app.listen(process.env.PORT || 5000, () => {
-    console.log(`server has started on port ${process.env.PORT || 5000}`)
+app.listen(process.env.PORT || 3000, () => {
+    console.log(`server has started on port ${process.env.PORT || 3000}`)
 })
 
 //___________________
