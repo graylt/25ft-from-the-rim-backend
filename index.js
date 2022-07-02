@@ -40,9 +40,9 @@ app.use(express.static(path.join(__dirname, 'build')));
 // routes
 /////////////////////////////////////////////////////////////////////////
 
-app.use((req, res, next) => {
-  res.sendFile(path.join(__dirname, '..', 'build', 'index.html'));
-});
+// app.use((req, res, next) => {
+//   res.sendFile(path.join(__dirname, '..', 'build', 'index.html'));
+// });
 
 // Authorization
 /////////////////////////////////////////////////////////////////////////
@@ -79,7 +79,7 @@ postgres.connect();
 //     res.sendFile(path.join(__dirname + '/../client/build/index.html'))
 // })
 
-app.get('/index', function(req, res) {
+app.get('/', function(req, res) {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
   });
 
