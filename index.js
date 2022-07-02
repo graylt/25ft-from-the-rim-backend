@@ -23,7 +23,8 @@ require('dotenv').config();
 app.use(express.json());
 app.use(cors());
 
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(path.join(__dirname, '..', 'build')));
+app.use(express.static('public'));
 
 if (process.env.NODE_ENV === 'production') {
     // Exprees will serve up production assets
@@ -43,10 +44,9 @@ app.use(express.urlencoded({extended: false}));
 // routes
 /////////////////////////////////////////////////////////////////////////
 
-app.get('*', function (req, res) {
-    const index = path.join(__dirname, 'build', 'index.html');
-    res.sendFile(index);
-  });
+app.use((req, res, next) => {
+  res.sendFile(path.join(__dirname, '..', 'build', 'index.html'));
+});
 
 // Authorization
 /////////////////////////////////////////////////////////////////////////
