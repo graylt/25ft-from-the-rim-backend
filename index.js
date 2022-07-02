@@ -16,6 +16,9 @@ const postgres = require('./postgres.js');
 // const jwtGenerator = require('./utils/jwtGenerator');
 // const jwt = require('jsonwebtoken');
 require('dotenv').config();
+dotenv.config({
+    path: '../.env'
+})
 
 //___________________
 //Middleware
@@ -52,9 +55,6 @@ const testController = require('./controllers/test.js');
 app.use('/test', testController)
 
 // After defining your routes, anything that doesn't match what's above, we want to return index.html from our built React app
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname + '/../client/build/index.html'))
-})
 
 
 //___________________
@@ -75,6 +75,10 @@ postgres.connect();
 //     console.log('listening...');
 
 // })
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname + '/../client/build/index.html'))
+})
 
 app.listen(process.env.PORT || 3000, () => {
     console.log('listening...');
