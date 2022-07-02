@@ -12,7 +12,7 @@ const path = require('path');
 const postgres = require('./postgres.js');
 const PORT = process.env.PORT || 5000;
 // const bcrypt = require('bcrypt');
-// const validInfo = require('./middleware/validInfo');
+const validInfo = require('./middleware/validInfo');
 // const authorize = require('./middleware/authorize');
 // const jwtGenerator = require('./utils/jwtGenerator');
 // const jwt = require('jsonwebtoken');
@@ -69,8 +69,8 @@ app.get('/profile', validInfo, async (req, res) => {
     });
 });
 
-const authController = require('./controllers/jwtAuth.js');
-app.use('/auth', authController)
+// const authController = require('./controllers/jwtAuth.js');
+// app.use('/auth', authController)
 
 const testController = require('./controllers/test.js');
 app.use('/test', testController)
