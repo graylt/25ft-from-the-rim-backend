@@ -3,30 +3,49 @@ const jwt = require('jsonwebtoken');
 const config = require("../config/authConfig.js");
 require('dotenv').config();
 
-module.exports = async (req, res, next) => {
-    // console.log(req.header('token'));
-    // console.log('token?')
-    // try {
-// get token from header
-        const jwtToken = req.header('token');
- // return if there is no token
-        if (!jwtToken) {
-            return res.status(403).json('Token not found')
-        }
-// verify token
-        try {
-// this will give the profile id (profile:{id: profile.id})
-        const payload = jwt.verify(jwtToken, config.secret);
+// module.exports = async (req, res, next) => {
+//     // console.log(req.header('token'));
+//     // console.log('token?')
+//     // try {
+// // get token from header
+//         const jwtToken = req.header('token');
+//  // return if there is no token
+//         if (!jwtToken) {
+//             return res.status(403).json('Token not found')
+//         }
+// // verify token
+//         try {
+// // this will give the profile id (profile:{id: profile.id})
+//         const payload = jwt.verify(jwtToken, config.secret);
 
-        // req.profile = payload.profile;
-        req.id = payload.id;
+//         // req.profile = payload.profile;
+//         req.id = payload.id;
 
-        next();
-    } catch (err) {
-        console.error(err.message);
-        return res.status(403).json('Invalid token')
-    }
-}
+//         next();
+//     } catch (err) {
+//         console.error(err.message);
+//         return res.status(403).json('Invalid token')
+//     }
+// }
+
+function authToken(req, res, next) {
+    const authHeader = req.headers['jwtToken']
+    const jwtToken = authHeader && authHeader.split(' ')[1]
+  
+    if (jwtToken == null) return res.sendStatus(401)
+  
+    jwt.verify(jwtToken, config.secret, (err, decoded) => {
+      console.log(err)
+  
+      if (err) return res.sendStatus(403)
+  
+      req.profile = decoded
+  
+      next()
+    })
+  }
+
+module.exports = authToken;
 
 /////////////////////////////////////////////////////////////////////////
 // code graveyard

@@ -10,8 +10,8 @@ const cors = require('cors');
 const app = express();
 const path = require('path');
 const postgres = require('./postgres.js');
-const PORT = process.env.PORT || 3000;
-// const bcrypt = require('bcrypt');
+// const PORT = process.env.PORT || 3000;
+const bcrypt = require('bcrypt');
 const validInfo = require('./middleware/validInfo');
 const authorize = require('./middleware/authorize');
 const jwtGenerator = require('./utils/jwtGenerator');
@@ -31,16 +31,18 @@ app.use(express.json());
 
 //Static
 // app.use(express.static('public'));
-// app.use(express.static(__dirname + "/public"));
+app.use(express.static(__dirname + "/public"));
 
 // // Serve static files from the React frontend app
 // app.use(express.static(path.join(__dirname, 'build')));
 
-if (process.env.NODE_ENV === "production") {
-    //server static content
-    //npm run build
-    app.use(express.static(path.join(__dirname, "client/build")));
-  }
+
+//this worked
+// if (process.env.NODE_ENV === "production") {
+//     //server static content
+//     //npm run build
+//     app.use(express.static(path.join(__dirname, "client/build")));
+//   }
   
 //   console.log(__dirname);
 //   console.log(path.join(__dirname, "client/build"));
@@ -55,16 +57,19 @@ if (process.env.NODE_ENV === "production") {
 //   res.sendFile(path.join(__dirname, '..', 'build', 'index.html'));
 // });
 
-app.get("/", (req, res, next) => {
-    res.sendFile( path.resolve( __dirname, 'public/index.html' ) );
-});
+//this worked
+// app.get("/", (req, res, next) => {
+//     res.sendFile( path.resolve( __dirname, '/public' ) );
+// });
+
+
 
 // Authorization
 /////////////////////////////////////////////////////////////////////////
 
 
 // route for dashboard
-router.post('/', authorize, async (req, res) => {
+app.post('/', authorize, async (req, res) => {
     try {
         const profile = await postgres.query(
             'SELECT name FROM profiles WHERE id = $1', 
@@ -89,7 +94,7 @@ app.get('/profile', validInfo, async (req, res) => {
 });
 
 //post/create
-router.post('/register', validInfo, async (req, res) => {
+app.post('/register', validInfo, async (req, res) => {
     const {name, email, password} = req.body;
     try {
         const profile = await postgres.query('SELECT * FROM profiles WHERE email = $1', 
@@ -126,8 +131,8 @@ router.post('/register', validInfo, async (req, res) => {
         }
     });
 
-    //login
-router.post('/login', validInfo, async (req, res) => {
+//login
+app.post('/login', validInfo, async (req, res) => {
     const {email, password} = req.body;
 
     try {
@@ -162,7 +167,7 @@ router.post('/login', validInfo, async (req, res) => {
 });
 
 //logout
-router.post('/logout', validInfo, async (req, res) => {
+app.post('/logout', validInfo, async (req, res) => {
     try {
       return res.status(200).clearCookie(
         'token', 
@@ -181,7 +186,8 @@ router.post('/logout', validInfo, async (req, res) => {
 })
 
 //verify
-router.post('/verify', authorize, (req, res) => {
+app.post('/verify', authorize, (req, res) => {
+// app.post('/verify', authorize, (req, res) => {
     try {
         res.json(true);
     } catch (err) {
@@ -192,8 +198,14 @@ router.post('/verify', authorize, (req, res) => {
     }
 })
 
+// get token from fetch request
+// const token = await res.json();
+
+// // set token in cookie
+// document.cookie = `token=${jwtToken}`
+
 //edit profile name
-router.put('/:id', validInfo, async (req, res) => {
+app.put('/:id', validInfo, async (req, res) => {
     const {name} = req.body;
     const {id} = req.params;
     try {
@@ -211,7 +223,7 @@ router.put('/:id', validInfo, async (req, res) => {
 })
 
 //delete profile
-router.delete('/:id', validInfo, async (req, res) => {
+app.delete('/:id', validInfo, async (req, res) => {
     const {id} = req.params;
     try {
         const deleteProfile = await postgres.query(
@@ -249,10 +261,10 @@ app.use('/test', testController)
 
 postgres.connect();
 
-// app.listen (3000, () => {
-//     console.log('listening...');
+app.listen (3000, () => {
+    console.log('listening...');
 
-// })
+})
 
 // app.get('*', (req, res) => {
 //     res.sendFile(path.join(__dirname + '/../client/build/index.html'))
@@ -275,13 +287,14 @@ postgres.connect();
 // const port = process.env.PORT || 5000;
 // app.listen(port, () => console.log("Server running on port 5000"));
 
-app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "client/build/index.html"));
-  });
+//this worked
+// app.get("*", (req, res) => {
+//     res.sendFile(path.join(__dirname, "client/build/index.html"));
+//   });
   
-  app.listen(PORT, () => {
-    console.log(`Server is starting on port ${PORT}`);
-  });
+//   app.listen(PORT, () => {
+//     console.log(`Server is starting on port ${PORT}`);
+//   });
 
 //___________________
 //Listener

@@ -1,16 +1,14 @@
 // const express = require('express');
 // const router = express.Router();
 // const bcrypt = require('bcrypt');
-
-// const pool = require('../db');
-// const authConfig = require("../config/authConfig");
-
+// // const pool = require('../db');
+// // const authConfig = require("../config/authConfig");
 // const validInfo = require('../middleware/validInfo');
 // const jwtGenerator = require('../utils/jwtGenerator');
 // const authorize = require('../middleware/authorize');
 // const postgres = require('../postgres.js');
 
-// // route for dashboard
+// route for dashboard
 // router.post('/', authorize, async (req, res) => {
 //     try {
 //         const profile = await postgres.query(
@@ -109,19 +107,19 @@
 //     }
 // });
 
-// //verify
-// router.post('/verify', authorize, (req, res) => {
-//     try {
-//         res.json(true);
-//     } catch (err) {
-//         console.error(err.message);
-//         res.status(500).json(
-//             'Server error'
-//             )
-//     }
-// })
+//verify
+router.post('/verify', authorize, (req, res) => {
+    try {
+        res.json(true);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json(
+            'Server error'
+            )
+    }
+})
 
-// //logout
+//logout
 // router.post('/logout', validInfo, async (req, res) => {
 //     try {
 //       return res.status(200).clearCookie(
