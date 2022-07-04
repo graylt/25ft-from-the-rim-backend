@@ -1,29 +1,31 @@
-const express = require('express');
-const router = express.Router();
-const bcrypt = require('bcrypt');
+// const express = require('express');
+// const router = express.Router();
+// const bcrypt = require('bcrypt');
+
 // const pool = require('../db');
 // const authConfig = require("../config/authConfig");
-const validInfo = require('../middleware/validInfo');
-const jwtGenerator = require('../utils/jwtGenerator');
-const authorize = require('../middleware/authorize');
-const postgres = require('../postgres.js');
 
-// route for dashboard
-router.post('/', authorize, async (req, res) => {
-    try {
-        const profile = await postgres.query(
-            'SELECT name FROM profiles WHERE id = $1', 
-            [req.id]
-        );
+// const validInfo = require('../middleware/validInfo');
+// const jwtGenerator = require('../utils/jwtGenerator');
+// const authorize = require('../middleware/authorize');
+// const postgres = require('../postgres.js');
 
-        res.json(profile.rows[0]);
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send(
-            'Server error'
-            )
-    }
-})
+// // route for dashboard
+// router.post('/', authorize, async (req, res) => {
+//     try {
+//         const profile = await postgres.query(
+//             'SELECT name FROM profiles WHERE id = $1', 
+//             [req.id]
+//         );
+
+//         res.json(profile.rows[0]);
+//     } catch (err) {
+//         console.error(err.message);
+//         res.status(500).send(
+//             'Server error'
+//             )
+//     }
+// })
 
 // routes for authorization
 // router.get('/', validInfo, async (req, res) => {
@@ -35,143 +37,143 @@ router.post('/', authorize, async (req, res) => {
 // });
 
 //post/create
-router.post('/register', validInfo, async (req, res) => {
-    const {name, email, password} = req.body;
-    try {
-        const profile = await postgres.query('SELECT * FROM profiles WHERE email = $1', 
-        [email]
-        );
+// router.post('/register', validInfo, async (req, res) => {
+//     const {name, email, password} = req.body;
+//     try {
+//         const profile = await postgres.query('SELECT * FROM profiles WHERE email = $1', 
+//         [email]
+//         );
 
-        if (profile.rows.length > 0) {
-            return res.status(401).json(
-                'The profile already exists'
-                );
-        }
+//         if (profile.rows.length > 0) {
+//             return res.status(401).json(
+//                 'The profile already exists'
+//                 );
+//         }
 
-        const salt = await bcrypt.genSalt(10);
-        const bcryptPassword = await bcrypt.hash(password, salt);
+//         const salt = await bcrypt.genSalt(10);
+//         const bcryptPassword = await bcrypt.hash(password, salt);
 
-        const newProfile = await postgres.query(  
-            `INSERT INTO profiles (name, email, password) VALUES ($1, $2, $3) RETURNING *`, 
-            [name, email, bcryptPassword]
-        );
+//         const newProfile = await postgres.query(  
+//             `INSERT INTO profiles (name, email, password) VALUES ($1, $2, $3) RETURNING *`, 
+//             [name, email, bcryptPassword]
+//         );
     
-        // return res.json(newProfile);
-        // } catch (err) {
-        //     console.error(err.message);
-        // }
+//         // return res.json(newProfile);
+//         // } catch (err) {
+//         //     console.error(err.message);
+//         // }
 
-        const jwtToken = jwtGenerator(newProfile.rows[0].id);
+//         const jwtToken = jwtGenerator(newProfile.rows[0].id);
 
-        return res.json({jwtToken});
-    } catch (err) {
-            console.error(err.message);
-            return res.status(500).send(
-                'Server error'
-                )
-        }
-    });
+//         return res.json({jwtToken});
+//     } catch (err) {
+//             console.error(err.message);
+//             return res.status(500).send(
+//                 'Server error'
+//                 )
+//         }
+//     });
 
 //login
-router.post('/login', validInfo, async (req, res) => {
-    const {email, password} = req.body;
+// router.post('/login', validInfo, async (req, res) => {
+//     const {email, password} = req.body;
 
-    try {
-        const profile = await postgres.query('SELECT * FROM profiles WHERE email = $1', 
-        [email]
-        );
+//     try {
+//         const profile = await postgres.query('SELECT * FROM profiles WHERE email = $1', 
+//         [email]
+//         );
 
-        if (profile.rows.length === 0) {
-            return res.status(401).json(
-                'Invalid email'
-                );
-        }
-        const validPassword = await bcrypt.compare(
-            password, 
-            profile.rows[0].password
-        );
+//         if (profile.rows.length === 0) {
+//             return res.status(401).json(
+//                 'Invalid email'
+//                 );
+//         }
+//         const validPassword = await bcrypt.compare(
+//             password, 
+//             profile.rows[0].password
+//         );
 
-        if (!validPassword) {
-            return res.status(401).json(
-                'Invalid password'
-                )
-        }
+//         if (!validPassword) {
+//             return res.status(401).json(
+//                 'Invalid password'
+//                 )
+//         }
 
-        const jwtToken = jwtGenerator(profile.rows[0].id);
-        return res.json({jwtToken});
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send(
-            'Internal server error'
-            );
-    }
-});
+//         const jwtToken = jwtGenerator(profile.rows[0].id);
+//         return res.json({jwtToken});
+//     } catch (err) {
+//         console.error(err.message);
+//         res.status(500).send(
+//             'Internal server error'
+//             );
+//     }
+// });
 
-//verify
-router.post('/verify', authorize, (req, res) => {
-    try {
-        res.json(true);
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).json(
-            'Server error'
-            )
-    }
-})
+// //verify
+// router.post('/verify', authorize, (req, res) => {
+//     try {
+//         res.json(true);
+//     } catch (err) {
+//         console.error(err.message);
+//         res.status(500).json(
+//             'Server error'
+//             )
+//     }
+// })
 
-//logout
-router.post('/logout', validInfo, async (req, res) => {
-    try {
-      return res.status(200).clearCookie(
-        'token', 
-        { httpOnly: true })
-        .json({
-        success: true,
-        message: 
-        'Logged out successfully',
-      })
-    } catch (error) {
-      console.log(error.message)
-      return res.status(500).json({
-        error: error.message,
-      })
-    }
-})
+// //logout
+// router.post('/logout', validInfo, async (req, res) => {
+//     try {
+//       return res.status(200).clearCookie(
+//         'token', 
+//         { httpOnly: true })
+//         .json({
+//         success: true,
+//         message: 
+//         'Logged out successfully',
+//       })
+//     } catch (error) {
+//       console.log(error.message)
+//       return res.status(500).json({
+//         error: error.message,
+//       })
+//     }
+// })
 
-router.put('/:id', validInfo, async (req, res) => {
-    const {name} = req.body;
-    const {id} = req.params;
-    try {
-            const updateProfile = await postgres.query( 
-                `UPDATE profiles SET name = '${name}' WHERE id = ${id}`,
-                // [name, id]
-            );
-            return res.json(updateProfile);
-            } catch (err) {
-                console.error(err.message);
-                res.status(500).json(
-                    'Unable to update'
-                    )
-    }
-})
+// router.put('/:id', validInfo, async (req, res) => {
+//     const {name} = req.body;
+//     const {id} = req.params;
+//     try {
+//             const updateProfile = await postgres.query( 
+//                 `UPDATE profiles SET name = '${name}' WHERE id = ${id}`,
+//                 // [name, id]
+//             );
+//             return res.json(updateProfile);
+//             } catch (err) {
+//                 console.error(err.message);
+//                 res.status(500).json(
+//                     'Unable to update'
+//                     )
+//     }
+// })
 
-router.delete('/:id', validInfo, async (req, res) => {
-    const {id} = req.params;
-    try {
-        const deleteProfile = await postgres.query(
-            `DELETE FROM profiles WHERE id = ${id}`,
-        );
-        res.json(deleteProfile);
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).json(
-            'Unable to delete'
-            )
-    }
-})
+// router.delete('/:id', validInfo, async (req, res) => {
+//     const {id} = req.params;
+//     try {
+//         const deleteProfile = await postgres.query(
+//             `DELETE FROM profiles WHERE id = ${id}`,
+//         );
+//         res.json(deleteProfile);
+//     } catch (err) {
+//         console.error(err.message);
+//         res.status(500).json(
+//             'Unable to delete'
+//             )
+//     }
+// })
 
 
-module.exports = router;
+// module.exports = router;
 
 /////////////////////////////////////////////////////////////////////////
 // code graveyard
