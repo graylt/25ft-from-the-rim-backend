@@ -10,7 +10,7 @@ const cors = require('cors');
 const app = express();
 const path = require('path');
 const postgres = require('./postgres.js');
-// const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 const bcrypt = require('bcrypt');
 const validInfo = require('./middleware/validInfo');
 const authorize = require('./middleware/authorize');
@@ -261,10 +261,10 @@ app.use('/test', testController)
 
 postgres.connect();
 
-app.listen (3000, () => {
-    console.log('listening...');
+// app.listen (3000, () => {
+//     console.log('listening...');
 
-})
+// })
 
 // app.get('*', (req, res) => {
 //     res.sendFile(path.join(__dirname + '/../client/build/index.html'))
@@ -292,9 +292,9 @@ app.listen (3000, () => {
 //     res.sendFile(path.join(__dirname, "client/build/index.html"));
 //   });
   
-//   app.listen(PORT, () => {
-//     console.log(`Server is starting on port ${PORT}`);
-//   });
+  app.listen(PORT, () => {
+    console.log(`Server is starting on port ${PORT}`);
+  });
 
 //___________________
 //Listener
