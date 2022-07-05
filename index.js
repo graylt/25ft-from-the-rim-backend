@@ -186,10 +186,16 @@ app.post('/logout', validInfo, async (req, res) => {
 })
 
 //verify
-app.post('/verify', authorize, (req, res) => {
+app.post('/verify', authorize, async (req, res) => {
 // app.post('/verify', authorize, (req, res) => {
     try {
-        res.json(true);
+        res.status(200).json({
+            msg: 'Token is valid',
+            id: req.profile.id,
+            name: req.profile.name,
+            email: req.profile.email,
+            status: 200
+        });
     } catch (err) {
         console.error(err.message);
         res.status(500).json(
@@ -197,6 +203,17 @@ app.post('/verify', authorize, (req, res) => {
             )
     }
 })
+// app.get('/verify', authorize, (req, res) => {
+// // app.post('/verify', authorize, (req, res) => {
+//     try {
+//         res.json(true);
+//     } catch (err) {
+//         console.error(err.message);
+//         res.status(500).json(
+//             'Server error'
+//             )
+//     }
+// })
 
 // get token from fetch request
 // const token = await res.json();

@@ -29,7 +29,7 @@ require('dotenv').config();
 // }
 
 function authToken(req, res, next) {
-    const authHeader = req.headers['jwtToken']
+    const authHeader = req.headers['token']
     const jwtToken = authHeader && authHeader.split(' ')[1]
   
     if (jwtToken == null) return res.sendStatus(401)
@@ -46,6 +46,47 @@ function authToken(req, res, next) {
   }
 
 module.exports = authToken;
+
+// const authToken = async (req, res, next) => {
+    // if (req.method === 'OPTIONS') {
+    //     next();
+    // } else if (req.headers.authorization && req.headers.authorization.includes('Bearer')) {
+    //     const {authorization} = req.headers;
+    //     const payload = authorization ? jwt.verify(
+    //         authorization.includes('Bearer') ? authorization.split(' ')[1] : authorization,
+    //         config.secret
+    //     ) : undefined;
+
+    //     if (err) return res.sendStatus(403)
+  
+    //   req.profile = profile
+  
+    //   next()
+        
+    //     }
+// }
+
+// module.exports = authToken;
+
+// function verifyToken(req, res, next) {
+    
+//     if (!req.headers.authorization) {
+//         return res.status(401).send('Unauthorized request')
+//     }
+//     let token = req.headers.authorization.split(' ')[1]
+//     if (token === 'null') {
+//         return res.status(401).send('Unauthorized request')
+//     }
+//     let payload = jwt.verify(token, 'secretKey')
+//     if (!payload) {
+//         return res.status(401).send('Unauthorized request')
+//     }
+//     req.userId = payload.subject
+//     next()
+// }
+
+// module.exports = verifyToken;
+
 
 /////////////////////////////////////////////////////////////////////////
 // code graveyard
