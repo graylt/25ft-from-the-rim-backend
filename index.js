@@ -55,12 +55,20 @@ app.use(express.static(__dirname + "/public"));
 // const fragmentsController = require('./controllers/fragments.js');
 // app.use('/fragments', fragmentsController)
 
-app.get('/', (req, res) => {
-    postgres.query('SELECT * FROM fragments ORDER BY id ASC;', (err, results) => {
-        res.send(results)
-        console.log(results)
+//get profiles
+app.get('/fragments', async (req, res) => {
+    postgres.query('SELECT * FROM fragments ORDER BY id ASC;', 
+    (err, results) => {
+        res.json(results.rows)
     });
 });
+
+// app.get('/', (req, res) => {
+//     postgres.query('SELECT * FROM fragments ORDER BY id ASC;', (err, results) => {
+//         res.send(results)
+//         console.log(results)
+//     });
+// });
 
 app.post("/add", async (req, res) => {
     try {
