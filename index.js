@@ -67,7 +67,7 @@ app.use(express.static(__dirname + "/public"));
 
 app.get('/fragments', async (req, res) => {
     try {
-      const allFragments = await postgres.query('SELECT * FROM fragments ORDER BY id ASC');
+      const allFragments = await postgres.query('SELECT * FROM cms ORDER BY id ASC');
       res.json(allFragments.rows);
     } catch (err) {
       console.error(err.message);
@@ -91,7 +91,7 @@ app.post("/add", async (req, res) => {
       const { play } = req.body;
       const { short_story } = req.body;
       const newCMS = await postgres.query(
-        "INSERT INTO fragments (date, movie, short, tv_series, book, play, short_story) VALUES ($1, $2 ,$3, $4, $5, $6, $7) RETURNING *",
+        "INSERT INTO cms (date, movie, short, tv_series, book, play, short_story) VALUES ($1, $2 ,$3, $4, $5, $6, $7) RETURNING *",
         [date, movie, short, tv_series, book, play, short_story]
       );
   
@@ -102,8 +102,8 @@ app.post("/add", async (req, res) => {
   });
 
 app.delete('/delete/:id', (req, res) => {
-    postgres.query(`DELETE FROM fragments WHERE id = ${req.params.id};`, (err, results) => {
-        postgres.query('SELECT * FROM fragments ORDER BY id ASC;', (err, results) => {
+    postgres.query(`DELETE FROM cms WHERE id = ${req.params.id};`, (err, results) => {
+        postgres.query('SELECT * FROM cms ORDER BY id ASC;', (err, results) => {
             res.json(results.rows)
         });
     });
@@ -121,7 +121,7 @@ app.put("/update/:id", async (req, res) => {
       const { short_story } = req.body;
     //   const { email } = req.body;
       const updateCMS = await postgres.query(
-        'UPDATE fragments SET date = $1, movie = $2, short = $3, tv_series = $4, book = $5, play = $6, short_story = $7 WHERE id = $8',
+        'UPDATE cms SET date = $1, movie = $2, short = $3, tv_series = $4, book = $5, play = $6, short_story = $7 WHERE id = $8',
         [date, movie, short, tv_series, book, play, short_story, id]
       );
   
