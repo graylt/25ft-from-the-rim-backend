@@ -57,7 +57,7 @@ app.use(express.static(__dirname + "/public"));
 
 app.get('/', (req, res) => {
     postgres.query('SELECT * FROM fragments ORDER BY date ASC;', (err, results) => {
-        res.send(results)
+        res.send(results.rows)
     });
 });
 
