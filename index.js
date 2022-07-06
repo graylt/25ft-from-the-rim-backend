@@ -56,7 +56,7 @@ app.use(express.static(__dirname + "/public"));
 // app.use('/fragments', fragmentsController)
 
 //get profiles
-app.get('/fragments', async (req, res) => {
+app.get('/fragments', (req, res) => {
     postgres.query('SELECT * FROM fragments ORDER BY id ASC;', 
     (err, results) => {
         res.json(results)
