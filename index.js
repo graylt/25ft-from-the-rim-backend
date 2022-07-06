@@ -11,11 +11,11 @@ const app = express();
 const path = require('path');
 const postgres = require('./postgres.js');
 const PORT = process.env.PORT || 3000;
-const bcrypt = require('bcrypt');
-const validInfo = require('./middleware/validInfo');
-const authorize = require('./middleware/authorize');
-const jwtGenerator = require('./utils/jwtGenerator');
-const jwt = require('jsonwebtoken');
+// const bcrypt = require('bcrypt');
+// const validInfo = require('./middleware/validInfo');
+// const authorize = require('./middleware/authorize');
+// const jwtGenerator = require('./utils/jwtGenerator');
+// const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 //___________________
@@ -26,7 +26,6 @@ app.use(cors());
 // app.use(methodOverride('_method'));
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
-
 
 
 //Static
@@ -53,6 +52,73 @@ app.use(express.static(__dirname + "/public"));
 // routes
 /////////////////////////////////////////////////////////////////////////
 
+const fragmentsController = require('./controllers/fragments.js');
+app.use('/fragments', fragmentsController)
+
+// app.get('/', (req, res) => {
+//     postgres.query('SELECT * FROM fragments ORDER BY id ASC;', (err, results) => {
+//         res.send(results.rows)
+//     });
+// });
+
+// //get profiles
+// app.get('/cms', async (req, res) => {
+//     postgres.query('SELECT * FROM fragments ORDER BY id ASC;', 
+//     (err, results) => {
+//         res.json(results.rows)
+//     });
+// });
+
+// app.post("/add", async (req, res) => {
+//     try {
+//       const { date } = req.body;
+//       const { movie } = req.body;
+//       const { short } = req.body;
+//       const { tv_series } = req.body;
+//       const { book } = req.body;
+//       const { play } = req.body;
+//       const { short_story } = req.body;
+//       const newCMS = await postgres.query(
+//         "INSERT INTO fragments (date, movie, short, tv_series, book, play, short_story) VALUES ($1, $2 ,$3, $4, $5, $6, $7) RETURNING *",
+//         [date, movie, short, tv_series, book, play, short_story]
+//       );
+  
+//       res.json(newCMS.rows[0]);
+//     } catch (err) {
+//       console.error(err.message);
+//     }
+//   });
+
+// app.delete('/delete/:id', (req, res) => {
+//     postgres.query(`DELETE FROM fragments WHERE id = ${req.params.id};`, (err, results) => {
+//         postgres.query('SELECT * FROM fragments ORDER BY id ASC;', (err, results) => {
+//             res.json(results.rows)
+//         });
+//     });
+// });
+
+// app.put("/update/:id", async (req, res) => {
+//     try {
+//       const { id } = req.params;
+//       const { date } = req.body;
+//       const { movie } = req.body;
+//       const { short } = req.body;
+//       const { tv_series } = req.body;
+//       const { book } = req.body;
+//       const { play } = req.body;
+//       const { short_story } = req.body;
+//     //   const { email } = req.body;
+//       const updateCMS = await postgres.query(
+//         'UPDATE fragments SET date = $1, movie = $2, short = $3, tv_series = $4, book = $5, play = $6, short_story = $7 WHERE id = $8',
+//         [date, movie, short, tv_series, book, play, short_story, id]
+//       );
+  
+//       res.json(updateCMS);
+//     } catch (err) {
+//       console.error(err.message);
+//     }
+//   });
+
 // app.use((req, res, next) => {
 //   res.sendFile(path.join(__dirname, '..', 'build', 'index.html'));
 // });
@@ -67,142 +133,130 @@ app.use(express.static(__dirname + "/public"));
 // Authorization
 /////////////////////////////////////////////////////////////////////////
 
+// app.get('/', (req, res) => {
+//     postgres.query('SELECT * FROM fragments ORDER BY id ASC;', (err, results) => {
+//         res.send(results.rows)
+//     });
+// });
+
 
 // route for dashboard
-app.post('/', authorize, async (req, res) => {
-    try {
-        const profile = await postgres.query(
-            'SELECT name FROM profiles WHERE id = $1', 
-            [req.id]
-        );
+// app.post('/dashboard', authorize, async (req, res) => {
+//     try {
+//         const profile = await postgres.query(
+//             'SELECT name FROM profiles WHERE id = $1', 
+//             [req.id]
+//         );
 
-        res.json(profile.rows[0]);
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send(
-            'Server error'
-            )
-    }
-})
+//         res.json(profile.rows[0]);
+//     } catch (err) {
+//         console.error(err.message);
+//         res.status(500).send(
+//             'Server error'
+//             )
+//     }
+// })
 
-//get profiles
-app.get('/profile', validInfo, async (req, res) => {
-    postgres.query('SELECT * FROM profiles ORDER BY id ASC;', 
-    (err, results) => {
-        res.json(results.rows)
-    });
-});
+// //get profiles
+// app.get('/profile', validInfo, async (req, res) => {
+//     postgres.query('SELECT * FROM profiles ORDER BY id ASC;', 
+//     (err, results) => {
+//         res.json(results.rows)
+//     });
+// });
 
-//post/create
-app.post('/register', validInfo, async (req, res) => {
-    const {name, email, password} = req.body;
-    try {
-        const profile = await postgres.query('SELECT * FROM profiles WHERE email = $1', 
-        [email]
-        );
+// //post/create
+// app.post('/register', validInfo, async (req, res) => {
+//     const {name, email, password} = req.body;
+//     try {
+//         const profile = await postgres.query('SELECT * FROM profiles WHERE email = $1', 
+//         [email]
+//         );
 
-        if (profile.rows.length > 0) {
-            return res.status(401).json(
-                'The profile already exists'
-                );
-        }
+//         if (profile.rows.length > 0) {
+//             return res.status(401).json(
+//                 'The profile already exists'
+//                 );
+//         }
 
-        const salt = await bcrypt.genSalt(10);
-        const bcryptPassword = await bcrypt.hash(password, salt);
+//         const salt = await bcrypt.genSalt(10);
+//         const bcryptPassword = await bcrypt.hash(password, salt);
 
-        const newProfile = await postgres.query(  
-            `INSERT INTO profiles (name, email, password) VALUES ($1, $2, $3) RETURNING *`, 
-            [name, email, bcryptPassword]
-        );
+//         const newProfile = await postgres.query(  
+//             `INSERT INTO profiles (name, email, password) VALUES ($1, $2, $3) RETURNING *`, 
+//             [name, email, bcryptPassword]
+//         );
     
-        // return res.json(newProfile);
-        // } catch (err) {
-        //     console.error(err.message);
-        // }
+//         // return res.json(newProfile);
+//         // } catch (err) {
+//         //     console.error(err.message);
+//         // }
 
-        const jwtToken = jwtGenerator(newProfile.rows[0].id);
+//         const jwtToken = jwtGenerator(newProfile.rows[0].id);
 
-        return res.json({jwtToken});
-    } catch (err) {
-            console.error(err.message);
-            return res.status(500).send(
-                'Server error'
-                )
-        }
-    });
+//         return res.json({jwtToken});
+//     } catch (err) {
+//             console.error(err.message);
+//             return res.status(500).send(
+//                 'Server error'
+//                 )
+//         }
+//     });
 
-//login
-app.post('/login', validInfo, async (req, res) => {
-    const {email, password} = req.body;
+// //login
+// app.post('/login', validInfo, async (req, res) => {
+//     const {email, password} = req.body;
 
-    try {
-        const profile = await postgres.query('SELECT * FROM profiles WHERE email = $1', 
-        [email]
-        );
+//     try {
+//         const profile = await postgres.query('SELECT * FROM profiles WHERE email = $1', 
+//         [email]
+//         );
 
-        if (profile.rows.length === 0) {
-            return res.status(401).json(
-                'Invalid email'
-                );
-        }
-        const validPassword = await bcrypt.compare(
-            password, 
-            profile.rows[0].password
-        );
+//         if (profile.rows.length === 0) {
+//             return res.status(401).json(
+//                 'Invalid email'
+//                 );
+//         }
+//         const validPassword = await bcrypt.compare(
+//             password, 
+//             profile.rows[0].password
+//         );
 
-        if (!validPassword) {
-            return res.status(401).json(
-                'Invalid password'
-                )
-        }
+//         if (!validPassword) {
+//             return res.status(401).json(
+//                 'Invalid password'
+//                 )
+//         }
 
-        const jwtToken = jwtGenerator(profile.rows[0].id);
-        return res.json({jwtToken});
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send(
-            'Internal server error'
-            );
-    }
-});
+//         const jwtToken = jwtGenerator(profile.rows[0].id);
+//         return res.json({jwtToken});
+//     } catch (err) {
+//         console.error(err.message);
+//         res.status(500).send(
+//             'Internal server error'
+//             );
+//     }
+// });
 
-//logout
-app.post('/logout', validInfo, async (req, res) => {
-    try {
-      return res.status(200).clearCookie(
-        'token', 
-        { httpOnly: true })
-        .json({
-        success: true,
-        message: 
-        'Logged out successfully',
-      })
-    } catch (error) {
-      console.log(error.message)
-      return res.status(500).json({
-        error: error.message,
-      })
-    }
-})
+// //logout
+// app.post('/logout', validInfo, async (req, res) => {
+//     try {
+//       return res.status(200).clearCookie(
+//         'token', 
+//         { httpOnly: true })
+//         .json({
+//         success: true,
+//         message: 
+//         'Logged out successfully',
+//       })
+//     } catch (error) {
+//       console.log(error.message)
+//       return res.status(500).json({
+//         error: error.message,
+//       })
+//     }
+// })
 
-//verify
-app.post('/verify', authorize, async (req, res) => {
-// app.post('/verify', authorize, (req, res) => {
-    try {
-        res.status(200).json({
-            msg: 'Token is valid',
-            id: req.profile.id,
-            name: req.profile.name,
-            email: req.profile.email,
-            status: 200
-        });
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).json(
-            'Server error'
-            )
-    }
-})
 // app.get('/verify', authorize, (req, res) => {
 // // app.post('/verify', authorize, (req, res) => {
 //     try {
@@ -215,51 +269,54 @@ app.post('/verify', authorize, async (req, res) => {
 //     }
 // })
 
-// get token from fetch request
-// const token = await res.json();
+// // get token from fetch request
+// // const token = await res.json();
 
-// // set token in cookie
-// document.cookie = `token=${jwtToken}`
+// // // set token in cookie
+// // document.cookie = `token=${jwtToken}`
 
-//edit profile name
-app.put('/:id', validInfo, async (req, res) => {
-    const {name} = req.body;
-    const {id} = req.params;
-    try {
-            const updateProfile = await postgres.query( 
-                `UPDATE profiles SET name = '${name}' WHERE id = ${id}`,
-                // [name, id]
-            );
-            return res.json(updateProfile);
-            } catch (err) {
-                console.error(err.message);
-                res.status(500).json(
-                    'Unable to update'
-                    )
-    }
-})
+// //edit profile name
+// app.put('/:id', validInfo, async (req, res) => {
+//     const {name} = req.body;
+//     const {id} = req.params;
+//     try {
+//             const updateProfile = await postgres.query( 
+//                 `UPDATE profiles SET name = '${name}' WHERE id = ${id}`,
+//                 // [name, id]
+//             );
+//             return res.json(updateProfile);
+//             } catch (err) {
+//                 console.error(err.message);
+//                 res.status(500).json(
+//                     'Unable to update'
+//                     )
+//     }
+// })
 
-//delete profile
-app.delete('/:id', validInfo, async (req, res) => {
-    const {id} = req.params;
-    try {
-        const deleteProfile = await postgres.query(
-            `DELETE FROM profiles WHERE id = ${id}`,
-        );
-        res.json(deleteProfile);
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).json(
-            'Unable to delete'
-            )
-    }
-})
+// //delete profile
+// app.delete('/:id', validInfo, async (req, res) => {
+//     const {id} = req.params;
+//     try {
+//         const deleteProfile = await postgres.query(
+//             `DELETE FROM profiles WHERE id = ${id}`,
+//         );
+//         res.json(deleteProfile);
+//     } catch (err) {
+//         console.error(err.message);
+//         res.status(500).json(
+//             'Unable to delete'
+//             )
+//     }
+// })
 
-// const authController = require('./controllers/jwtAuth.js');
-// app.use('/auth', authController)
+// // const authController = require('./controllers/jwtAuth.js');
+// // app.use('/auth', authController)
 
-const testController = require('./controllers/test.js');
-app.use('/test', testController)
+// const testController = require('./controllers/test.js');
+// app.use('/test', testController)
+
+// const fragmentsController = require('./controllers/fragments.js');
+// app.use('/', fragmentsController)
 
 // After defining your routes, anything that doesn't match what's above, we want to return index.html from our built React app
 
@@ -672,3 +729,25 @@ postgres.connect();
     //         console.error(err.message)
     //     }
     // });
+
+
+
+
+    //verify
+// app.post('/verify', authorize, async (req, res) => {
+// // app.post('/verify', authorize, (req, res) => {
+//     try {
+//         res.status(200).json({
+//             msg: 'Token is valid',
+//             id: req.profile.id,
+//             name: req.profile.name,
+//             email: req.profile.email,
+//             status: 200
+//         });
+//     } catch (err) {
+//         console.error(err.message);
+//         res.status(500).json(
+//             'Server error'
+//             )
+//     }
+// })

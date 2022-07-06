@@ -3,6 +3,30 @@ const jwt = require('jsonwebtoken');
 const config = require("../config/authConfig.js");
 require('dotenv').config();
 
+
+
+//this middleware will on continue on if the token is inside the local storage
+
+module.exports = function(req, res, next) {
+  // Get token from header
+  const token = req.header("jwt_token");
+
+  // Check if not token
+  if (!token) {
+    return res.status(403).json({ msg: "authorization denied" });
+  }
+
+  // Verify token
+  try {
+    //it is going to give use the user id (user:{id: user.id})
+    const verify = jwt.verify(token, process.env.jwtSecret);
+
+    req.user = verify.user;
+    next();
+  } catch (err) {
+    res.status(401).json({ msg: "Token is not valid" });
+  }
+};
 // module.exports = async (req, res, next) => {
 //     // console.log(req.header('token'));
 //     // console.log('token?')
@@ -28,24 +52,24 @@ require('dotenv').config();
 //     }
 // }
 
-function authToken(req, res, next) {
-    const authHeader = req.headers['token']
-    const jwtToken = authHeader && authHeader.split(' ')[1]
+// function authToken(req, res, next) {
+//     const authHeader = req.headers['token']
+//     const jwtToken = authHeader && authHeader.split(' ')[1]
   
-    if (jwtToken == null) return res.sendStatus(401)
+//     if (jwtToken == null) return res.sendStatus(401)
   
-    jwt.verify(jwtToken, config.secret, (err, decoded) => {
-      console.log(err)
+//     jwt.verify(jwtToken, config.secret, (err, decoded) => {
+//       console.log(err)
   
-      if (err) return res.sendStatus(403)
+//       if (err) return res.sendStatus(403)
   
-      req.profile = decoded
+//       req.profile = decoded
   
-      next()
-    })
-  }
+//       next()
+//     })
+//   }
 
-module.exports = authToken;
+// module.exports = authToken;
 
 // const authToken = async (req, res, next) => {
     // if (req.method === 'OPTIONS') {
