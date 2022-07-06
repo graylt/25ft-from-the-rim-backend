@@ -5,7 +5,7 @@ const postgres = require('../postgres.js');
 
 router.get('/', (req, res) => {
     postgres.query('SELECT * FROM fragments ORDER BY date ASC;', (err, results) => {
-        res.send(results.rows)
+        res.send(results)
     });
 });
 
