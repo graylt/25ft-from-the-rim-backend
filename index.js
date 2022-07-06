@@ -56,12 +56,21 @@ app.use(express.static(__dirname + "/public"));
 // app.use('/fragments', fragmentsController)
 
 //get profiles
-app.get('/fragments', (req, res) => {
-    postgres.query('SELECT * FROM fragments ORDER BY id ASC;', 
-    (err, results) => {
-        res.json(results)
-    });
-});
+// app.get('/fragments', (req, res) => {
+//     postgres.query('SELECT * FROM fragments ORDER BY id ASC;', 
+//     (err, results) => {
+//         res.json(results)
+//     });
+// });
+
+app.get('/fragments', async (req, res) => {
+    try {
+      const allFragments = await pool.query('SELECT * FROM fragments ORDER BY id ASC');
+      res.json(allFragments.rows);
+    } catch (err) {
+      console.error(err.message);
+    }
+  });
 
 // app.get('/', (req, res) => {
 //     postgres.query('SELECT * FROM fragments ORDER BY id ASC;', (err, results) => {
