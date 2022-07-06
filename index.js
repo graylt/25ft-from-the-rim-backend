@@ -59,7 +59,7 @@ app.use(express.static(__dirname + "/public"));
 app.get('/fragments', async (req, res) => {
     postgres.query('SELECT * FROM fragments ORDER BY id ASC;', 
     (err, results) => {
-        res.json(results.rows)
+        res.json(results)
     });
 });
 
