@@ -63,6 +63,8 @@ app.use(express.static(__dirname + "/public"));
 //     });
 // });
 
+//fet all fragments
+
 app.get('/fragments', async (req, res) => {
     try {
       const allFragments = await postgres.query('SELECT * FROM fragments ORDER BY id ASC');
