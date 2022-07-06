@@ -55,9 +55,10 @@ app.use(express.static(__dirname + "/public"));
 // const fragmentsController = require('./controllers/fragments.js');
 // app.use('/fragments', fragmentsController)
 
-app.get('/fragments', (req, res) => {
+app.get('/', (req, res) => {
     postgres.query('SELECT * FROM fragments ORDER BY id ASC;', (err, results) => {
-        res.send(results.rows)
+        res.send(results)
+        console.log(results)
     });
 });
 
