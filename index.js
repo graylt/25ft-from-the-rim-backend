@@ -118,7 +118,7 @@ app.put("/update/:id", async (req, res) => {
 // });
 
 // //get profiles
-// app.get('/cms', async (req, res) => {
+// app.get('/', async (req, res) => {
 //     postgres.query('SELECT * FROM fragments ORDER BY id ASC;', 
 //     (err, results) => {
 //         res.json(results.rows)
