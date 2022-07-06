@@ -65,7 +65,7 @@ app.use(express.static(__dirname + "/public"));
 
 app.get('/fragments', async (req, res) => {
     try {
-      const allFragments = await pool.query('SELECT * FROM fragments ORDER BY id ASC');
+      const allFragments = await postgres.query('SELECT * FROM fragments ORDER BY id ASC');
       res.json(allFragments.rows);
     } catch (err) {
       console.error(err.message);
