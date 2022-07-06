@@ -24,10 +24,6 @@ CREATE TABLE cms(
 
 INSERT INTO fragments (date, movie, short) VALUES ($1,$2, $3);
 
-
-
-
-
 CREATE DATABASE 25ftfromtherim;
 
 CREATE TABLE teams(
